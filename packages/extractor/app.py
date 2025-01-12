@@ -28,6 +28,7 @@ s3 = boto3.client('s3',
 
 RABBITMQ_URL = os.getenv('RABBITMQ_URL')
 bucket_name = 'coursecrafter'
+print(RABBITMQ_URL,"RABBIT URL")
 
 
 connection = pika.BlockingConnection(pika.URLParameters(RABBITMQ_URL))

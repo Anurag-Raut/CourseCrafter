@@ -1,6 +1,6 @@
 FROM golang:1.22.1-alpine
 
-WORKDIR .
+WORKDIR /
 
 COPY go.mod .
 
@@ -10,9 +10,9 @@ RUN go mod download
 
 COPY . .
 
+EXPOSE 8080
 
-
-CMD ["go", "run", "main.go"]
+CMD ["go", "run", "-ldflags=-w -s", "main.go"]
 
 
 

@@ -9,6 +9,8 @@ import (
 	"CourseCrafter/utils"
 	"context"
 	"io"
+	"log"
+	"os"
 	"runtime"
 
 	"encoding/json"
@@ -252,6 +254,8 @@ func handleStreamingRequest(ctx context.Context, c *gin.Context, courseId string
 }
 
 func main() {
+	log.SetOutput(os.Stdout)
+
 	var domain = env.Get("DOMAIN", "localhost")
 
 	// Create S3 client
@@ -280,7 +284,7 @@ func main() {
 
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://coursecrafter.site","http://localhost:3000"},
+		AllowOrigins:     []string{"https://coursecrafter.site", "http://localhost:3000"},
 		AllowMethods:     []string{"GET", "POST", "OPTIONS"},
 		AllowHeaders:     []string{"Content-Type"},
 		AllowCredentials: true,
@@ -849,5 +853,5 @@ func main() {
 		c.JSON(http.StatusOK, gin.H{"message": "Hello test"})
 	})
 
-	r.Run("0.0.0.0:8080")
+	log.Fatal(r.Run("0.0.0.0:8080"))
 }

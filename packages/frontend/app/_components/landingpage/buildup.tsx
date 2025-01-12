@@ -42,32 +42,32 @@ const Buildup = () => {
 
         setProgressWidth1(
           (scaleValue(scrollPercent, 0, 33.333333333333, 0, 100) / 100) *
-            containerWidth
+          containerWidth
         );
         setProgressWidth2(0);
         setBreakpoint(0);
       } else if (scrollPercent >= 33.33 && scrollPercent < 66.66666666) {
         setProgressWidth1(
           (scaleValue(33.333333333333, 0, 33.333333333333, 0, 100) / 100) *
-            containerWidth
+          containerWidth
         );
         setProgressWidth2(
           (scaleValue(scrollPercent - 33.3333333, 0, 33.333333333333, 0, 100) /
             100) *
-            containerWidth +
-            5
+          containerWidth +
+          5
         );
         setBreakpoint(1);
       } else {
         setProgressWidth1(
           (scaleValue(33.333333333333, 0, 33.333333333333, 0, 100) / 100) *
-            containerWidth
+          containerWidth
         );
         setProgressWidth2(
           (scaleValue(66.66666666 - 33.3333333, 0, 33.333333333333, 0, 100) /
             100) *
-            containerWidth +
-            5
+          containerWidth +
+          5
         );
         setBreakpoint(2);
       }
@@ -99,16 +99,13 @@ const Buildup = () => {
           className="flex justify-center w-full bg-secondaryBackground h-screen justify-center flex items-center"
         >
           <div className="overflow-hidden flex justify-center  w-[89%]  bg-[linear-gradient(to_right,rgba(25,25,25,0)_0%,rgba(25,25,25,1)_20%,rgba(25,25,25,1)_25%,rgba(25,25,25,1)_25%,rgba(25,25,25,1)_35%,rgba(25,25,25,1)_35%,rgba(25,25,25,1)_50%,rgba(25,25,25,1)_65%,rgba(25,25,25,1)_65%,rgba(25,25,25,1)_75%,rgba(25,25,25,1)_75%,rgba(25,25,25,1)_80%,rgba(25,25,25,0)_100%)] ">
-            {/* <div className="w-[155px] h-5 bg-white">
-
-</div> */}
+          
             <div className=" w-[90%]  ">
               <div className="px-16 mt-6">
                 <div className="flex justify-between items-center  text-2xl font-bold">
                   <span
-                    className={`text-5xl tracking-tighter ${
-                      breakpoint >= 0 && "text-white"
-                    }`}
+                    className={`text-5xl tracking-tighter ${breakpoint >= 0 && "text-white"
+                      }`}
                   >
                     UPLOAD
                   </span>
@@ -123,9 +120,8 @@ const Buildup = () => {
                     ></div>
                   </div>
                   <span
-                    className={`text-5xl tracking-tighter ${
-                      breakpoint >= 1 && "text-white"
-                    }`}
+                    className={`text-5xl tracking-tighter ${breakpoint >= 1 && "text-white"
+                      }`}
                   >
                     CONVERT
                   </span>
@@ -136,9 +132,8 @@ const Buildup = () => {
                     ></div>
                   </div>
                   <span
-                    className={`text-5xl tracking-tighter ${
-                      breakpoint >= 2 && "text-white"
-                    }`}
+                    className={`text-5xl tracking-tighter ${breakpoint >= 2 && "text-white"
+                      }`}
                   >
                     STUDY
                   </span>

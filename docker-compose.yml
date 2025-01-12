@@ -1,20 +1,47 @@
-version: "3.8"
 services:
+  extractor:
+    build: ./packages/extractor
+    container_name: extractor-container
+    networks:
+      - network-app
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    restart: no
+    environment:
+      - PYTHONUNBUFFERED=1
 
+  app:
+    build: ./packages/backend
+    container_name: app-container
+    networks:
+      - network-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      # database:
+      #   condition: service_healthy
+    restart: no
+    environment:
+      - GODEBUG=gctrace=1
 
   rabbitmq:
-    image: rabbitmq:3.13
+    image: rabbitmq:3-alpine
     ports:
       - "5672:5672"
       - "15672:15672"
     networks:
       - network-app
     healthcheck:
-      test: rabbitmq-diagnostics -q ping
+      test: rabbitmq-diagnostics check_port_connectivity
       interval: 30s
       timeout: 30s
-      retries: 5
-
+      retries: 10
+    environment:
+      RABBITMQ_DEFAULT_USER: course
+      RABBITMQ_DEFAULT_PASS: crafter
 
   database:
     image: postgres:latest
@@ -23,20 +50,18 @@ services:
     networks:
       - network-app
     environment:
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - PGUSER=postgres
+      - POSTGRES_PASSWORD=newPaass
       - POSTGRES_DB=coursecrafter
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    # restart: always
-
-  extractor:
-    build: ./packages/extractor
-    networks:
-      - network-app
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-    restart: always
+    healthcheck:
+      test: pg_isready -h localhost -d coursecrafter
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
 
 networks:
   network-app:
