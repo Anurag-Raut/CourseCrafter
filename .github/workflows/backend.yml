@@ -16,5 +16,5 @@ jobs:
           echo "${{ secrets.EXTRACTOR_SECRET }}" >> .env
       - name: Restart services
         run: |
-          docker compose down || true
-          docker compose up -d
+          sudo docker compose down || true
+          sudo docker compose up -d
