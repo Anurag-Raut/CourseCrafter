@@ -12,9 +12,9 @@ jobs:
       - name: Create .env file
         run: |
           touch .env
-          echo "${{ secrets.BACKEND_SECRET }}" >> .env
-          echo "${{ secrets.EXTRACTOR_SECRET }}" >> .env
+          echo "${{ secrets.BACKEND_SECRET }}" >> ./packages/backend/.env
+          echo "${{ secrets.EXTRACTOR_SECRET }}" >> ./packages/extractor/.env
       - name: Restart services
         run: |
           echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker compose down || true
-          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker compose up -d
+          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S docker compose up -d --build
