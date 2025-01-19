@@ -21,7 +21,7 @@ export default function AuthComponent() {
     setAuth(false);
     setAuthToken(undefined);
   }
-  console.log("USER",user,error,"ERROR")
+  console.log("USER", user, error, "ERROR")
   // useEffect(() => {
   //   async function getLoggedStatus() {
   //     const res = await get("isLoggedIn", {});
@@ -40,20 +40,23 @@ export default function AuthComponent() {
   // }, [authToken]);
   return (
     <div className="">
-      {user ? (
+      {!!user && user.name ? (
         <div className="dropdown group dropdown-end ">
           <div tabIndex={0} role="button" className=" m-1">
             {" "}
             <div className="relative  cursor-pointer bg-slate-700 transition-all duration-800  flex rounded-full items-center  flex justify-end">
               <div className="group-hover:mx-3 text-white font-bold text-md    scale-0 group-hover:scale-100   transition-[width] duration-600 w-0 group-hover:w-[120px]">
                 <div className="scale-0 group-hover:scale-100 transition-all transform -translate-x-[-50px]  group-hover:translate-x-0 opacity-0 group-hover:opacity-100  duration-500 flex justify-center">
-                  {user?.name.length > 15
-                    ? user?.name.slice(0, 15) + "..."
+                  {user.name.length > 15
+                    ? user.name.slice(0, 15) + "..."
                     : user?.name}
                 </div>
               </div>
-              <Avatar name={user?.name} src={user?.profileImage} size={45} />
-            </div>
+              <Avatar
+                name={user.name}
+                src={user.picture || "https://via.placeholder.com/150"}
+                size={45}
+              />            </div>
           </div>
           <ul
             tabIndex={0}
@@ -82,13 +85,13 @@ export default function AuthComponent() {
         </div>
       ) : (
         <a
-        href={`/api/auth/login?returnTo=${"http://localhost:3000/loggedIn"}`}
+          href={`/api/auth/login?returnTo=${"http://localhost:3000/loggedIn"}`}
           className="z-10 relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm  text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 p-3 px-4 hover:opacity-70 transition-all duration-200 font-bold "
-          // onClick={() =>
-          //   //@ts-ignore
+        // onClick={() =>
+        //   //@ts-ignore
 
-          //   document.getElementById("login_modal").showModal()
-          // }
+        //   document.getElementById("login_modal").showModal()
+        // }
         >
           Login
         </a>

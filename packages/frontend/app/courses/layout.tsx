@@ -7,10 +7,10 @@ import { headers } from "next/headers";
 import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  const { user } = await getSession();
+  const session = await getSession();
 
 
-  if (!user) {
+  if (!session?.user) {
     redirect("/");
   }
   return (
