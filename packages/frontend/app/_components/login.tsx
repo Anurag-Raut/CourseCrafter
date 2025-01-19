@@ -86,7 +86,7 @@ export default function AuthComponent() {
         </div>
       ) : (
         <a
-          href={`/api/auth/login?returnTo=${process.env.NEXT_PUBLIC_URL}/loggedIn`}
+          href={`/api/auth/login?returnTo=${process.env.NEXT_PUBLIC_FRONTEND_URL}/loggedIn`}
           className="z-10 relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm  text-gray-900 rounded-lg group bg-gradient-to-br from-pink-500 to-orange-400 group-hover:from-pink-500 group-hover:to-orange-400 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-pink-200 dark:focus:ring-pink-800 p-3 px-4 hover:opacity-70 transition-all duration-200 font-bold "
         // onClick={() =>
         //   //@ts-ignore
