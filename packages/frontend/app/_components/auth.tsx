@@ -129,14 +129,14 @@ export function AuthComponent() {
                 </div>
                 <div className="rounded-lg  px-10 ">
                     <div className="flex" >
-                        <div key={"asd"} onClick={() => {
+                        {/* <div key={"asd"} onClick={() => {
                             setIsLogin(true)
-                        }} className=" w-full mr-3 flex rounded-lg relative  h-12">
-                            <div className="flex z-10 text-white w-full h-full justify-center items-center ">
+                        }} className=" w-full mr-3 flex rounded-lg relative  h-12"> */}
+                            <a href="/api/auth/login" className="flex z-10 text-white w-full h-full justify-center items-center ">
                                 Login
-                            </div>
-                            {isLogin && <motion.div layoutId="tab" className="absolute bg-gradient-secondary h-full w-full rounded-xl" />}
-                        </div>
+                            </a>
+                            {/* {isLogin && <motion.div layoutId="tab" className="absolute bg-gradient-secondary h-full w-full rounded-xl" />} */}
+                        {/* </div> */}
                         <div key={"sdf"} onClick={() => {
                             setIsLogin(false)
                         }} className=" w-full mr-3 flex rounded-lg relative  h-12">

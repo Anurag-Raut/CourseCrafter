@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@auth0/nextjs-auth0/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Suspense } from "react";
@@ -7,9 +8,9 @@ import { Suspense } from "react";
 function LoggedInComponent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user, error, isLoading } = useUser();
 
   useEffect(() => {
-    const code = searchParams.get("code");
 
     async function loginWithGoogle() {
       const res = await fetch(
@@ -19,7 +20,7 @@ function LoggedInComponent() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ code }),
+          body: JSON.stringify({ name:user?.name,email:user?.email,picture:user?.picture }),
           cache: "no-store",
           credentials: "include",
         }
@@ -35,9 +36,8 @@ function LoggedInComponent() {
       }
     }
 
-    if (code) {
       loginWithGoogle();
-    }
+    
   }, [searchParams, router]);
 
   return (

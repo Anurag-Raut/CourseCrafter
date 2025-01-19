@@ -5,6 +5,7 @@ import { Bounce, ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from "./_components/navbar";
 import NextTopLoader from 'nextjs-toploader';
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 
 
 const inter = Open_Sans({ subsets: ["latin"] });
@@ -25,6 +26,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+          <UserProvider>
+
       <body className={inter.className}>{
         <div className="bg-background w-full h-full min-h-screen">
 
@@ -47,6 +50,7 @@ export default function RootLayout({
           />
         </div>
       }</body>
+      </UserProvider>
     </html>
   );
 }

@@ -4,17 +4,18 @@ import React, { useState } from "react";
 import Cookies from "js-cookie";
 import { get } from "@/api";
 import * as NProgress from "nprogress";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const GetStartedButton = () => {
-  const router = useRouter()
+  const router = useRouter();
+  const {user}= useUser()
 
   return (
     <button
       onClick={async () => {
-        const res = await get("isLoggedIn", {});
       
-        const { auth } = res;
-        if (!auth) {
+        
+        if (!user) {
           //@ts-ignore
           document.getElementById("login_modal").showModal()
         }

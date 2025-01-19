@@ -3,7 +3,6 @@ package auth
 import (
 	"CourseCrafter/database"
 	"CourseCrafter/utils"
-	"context"
 	"fmt"
 	"net/http"
 	"time"
@@ -14,9 +13,6 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
-	"google.golang.org/api/googleapi"
-	oauth2pkg "google.golang.org/api/oauth2/v2"
-	"google.golang.org/api/option"
 )
 
 var jwtSecret = []byte(env.Get("JWT_SECRET", ""))
@@ -39,66 +35,23 @@ func GetGoogleUrl(c *gin.Context) {
 }
 
 func LoginWithGoogle(c *gin.Context) {
-	GOOGLE_CLIENT_ID := env.Get("GOOGLE_CLIENT_ID", "")
-	GOOGLE_CLIENT_SECRET := env.Get("GOOGLE_CLIENT_SECRET", "")
+
+	var userInfo struct {
+		Email   string `json:"email"`
+		Name    string `json:"name"`
+		Picture string `json:"picture"`
+	}
 	var domain = env.Get("DOMAIN", "localhost")
-	// Assuming you have a PostgreSQL database connection named "db"
 
-	code := struct {
-		Code string `json:"code"`
-	}{}
-	if err := c.BindJSON(&code); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	if err := c.BindJSON(&userInfo); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
-
-	conf := &oauth2.Config{
-		ClientID:     GOOGLE_CLIENT_ID,
-		ClientSecret: GOOGLE_CLIENT_SECRET,
-		RedirectURL:  env.Get("FRONTEND_URL", "http://localhost:3000"),
-		Scopes: []string{
-			"https://www.googleapis.com/auth/userinfo.profile",
-			"https://www.googleapis.com/auth/userinfo.email",
-		},
-		Endpoint: google.Endpoint,
-	}
-
-	ctx := context.Background()
-	tok, err := conf.Exchange(ctx, code.Code)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to exchange token"})
-		return
-	}
-
-	oauth2Service, err := oauth2pkg.NewService(ctx, option.WithScopes("https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"), option.WithTokenSource(conf.TokenSource(ctx, tok)))
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create OAuth2 service"})
-		return
-	}
-
-	userinfoService := oauth2pkg.NewUserinfoService(oauth2Service)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create Userinfo service"})
-		return
-	}
-	var ID int
-	userInfo, err := userinfoService.Get().Do(googleapi.QueryParameter("access_token", tok.AccessToken))
-	fmt.Println(userInfo.Email, "User_Info")
-	if userInfo.Email == "" {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to get email"})
-		return
-	}
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to get user info"})
-		return
-	}
-	fmt.Println(userInfo.Email, "UserInfo.emmail")
 	user := utils.User{Name: userInfo.Name, Email: userInfo.Email, Password: userInfo.Email, ProfileImage: &userInfo.Picture}
 
-	// Assuming you have a function AddUser in your database package
 	loggedUser, err := database.GetUserByEmail(userInfo.Email)
+	var ID int
 	if err != nil {
-
 		id, err := database.AddUser(user)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to create user"})
@@ -109,20 +62,17 @@ func LoginWithGoogle(c *gin.Context) {
 		ID = loggedUser.Id
 	}
 
-	// Generate JWT token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"username": userInfo.Name,
 		"id":       ID,
 	})
 
-	// Generate the token string
 	tokenString, err := token.SignedString(jwtSecret)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to generate JWT token"})
 		return
 	}
 
-	// Set JWT token in cookie
 	c.SetCookie("token", tokenString, 3600*24, "/", domain, true, true)
 
 	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("User %s created", userInfo.Name)})

@@ -4,13 +4,13 @@ import Navbar from "./_components/navbar";
 import { get } from "@/api";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
+import { getSession } from "@auth0/nextjs-auth0";
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  const res = await get("isLoggedIn", {}, new Headers(headers()));
-  console.log("resauth", res);
-  const { auth } = res;
+  const { user } = await getSession();
 
-  if (!auth) {
+
+  if (!user) {
     redirect("/");
   }
   return (

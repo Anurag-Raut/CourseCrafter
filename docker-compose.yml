@@ -17,7 +17,7 @@ services:
     networks:
       - network-app
     ports:
-      - "80:8080"
+      - "8080:8080"
     depends_on:
       rabbitmq:
         condition: service_healthy
